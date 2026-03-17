@@ -1,6 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_streamless_bloc/src/types.dart';
 import 'package:provider/provider.dart';
 import 'package:streamless_bloc/streamless_bloc.dart';
+
+import 'streamless_bloc_listener.dart';
 
 /// {@template bloc_selector}
 /// [StreamlessBlocSelector] selects a value from the bloc state and rebuilds only when
@@ -18,7 +22,7 @@ class StreamlessBlocSelector<B extends StreamlessBlocBase<S>, S, T>
 
   final B? bloc;
   final T Function(S state) selector;
-  final Widget Function(BuildContext context, T state) builder;
+  final BlocWidgetBuilder<T> builder;
 
   @override
   State<StreamlessBlocSelector<B, S, T>> createState() =>
@@ -28,25 +32,23 @@ class StreamlessBlocSelector<B extends StreamlessBlocBase<S>, S, T>
 class _StreamlessBlocSelectorState<B extends StreamlessBlocBase<S>, S, T>
     extends State<StreamlessBlocSelector<B, S, T>> {
   late B _bloc;
-  late T _value;
+  late T _state;
 
   @override
   void initState() {
     super.initState();
     _bloc = widget.bloc ?? context.read<B>();
-    _value = widget.selector(_bloc.state);
-    _bloc.addListener(_onState);
+    _state = widget.selector(_bloc.state);
   }
 
   @override
   void didUpdateWidget(StreamlessBlocSelector<B, S, T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final bloc = widget.bloc ?? context.read<B>();
-    if (_bloc != bloc) {
-      _bloc.removeListener(_onState);
-      _bloc = bloc;
-      _value = widget.selector(_bloc.state);
-      _bloc.addListener(_onState);
+    final oldBloc = oldWidget.bloc ?? context.read<B>();
+    final currentBloc = widget.bloc ?? oldBloc;
+    if (oldBloc != currentBloc) {
+      _bloc = currentBloc;
+      _state = widget.selector(_bloc.state);
     }
   }
 
@@ -55,26 +57,34 @@ class _StreamlessBlocSelectorState<B extends StreamlessBlocBase<S>, S, T>
     super.didChangeDependencies();
     final bloc = widget.bloc ?? context.read<B>();
     if (_bloc != bloc) {
-      _bloc.removeListener(_onState);
       _bloc = bloc;
-      _value = widget.selector(_bloc.state);
-      _bloc.addListener(_onState);
-    }
-  }
-
-  void _onState(S state) {
-    final newValue = widget.selector(state);
-    if (newValue != _value) {
-      setState(() => _value = newValue);
+      _state = widget.selector(_bloc.state);
     }
   }
 
   @override
-  void dispose() {
-    _bloc.removeListener(_onState);
-    super.dispose();
+  Widget build(BuildContext context) {
+    if (widget.bloc == null) {
+      context.select<B, bool>((bloc) => identical(_bloc, bloc));
+    }
+    return StreamlessBlocListener<B, S>(
+      bloc: _bloc,
+      listener: (context, state) {
+        final selectedState = widget.selector(state);
+        if (_state != selectedState) {
+          setState(() => _state = selectedState);
+        }
+      },
+      child: widget.builder(context, _state),
+    );
   }
 
   @override
-  Widget build(BuildContext context) => widget.builder(context, _value);
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<B?>('bloc', widget.bloc))
+      ..add(ObjectFlagProperty<BlocWidgetBuilder<T>>.has('builder', widget.builder))
+      ..add(ObjectFlagProperty<T Function(S)>.has('selector', widget.selector));
+  }
 }

@@ -13,7 +13,7 @@ abstract class Emitter<State> {
 
 /// Creates an [Emitter] for use in event handlers.
 /// Returns both the emitter and a complete callback.
-(Emitter<State> emitter, void Function() complete) createEmitter<State>(
+(_Emitter<State> emitter, void Function() complete) createEmitter<State>(
   void Function(State) onEmit,
 ) {
   final instance = _Emitter<State>(onEmit);
@@ -23,11 +23,9 @@ abstract class Emitter<State> {
 class _Emitter<State> implements Emitter<State> {
   _Emitter(this._onEmit);
 
-  final void Function(State state) _onEmit;
+  final void Function(State) _onEmit;
+  final _completer = Completer<void>();
   bool _isCompleted = false;
-
-  @override
-  bool get isDone => _isCompleted;
 
   @override
   void call(State state) {
@@ -39,7 +37,24 @@ class _Emitter<State> implements Emitter<State> {
     if (!_isCompleted) _onEmit(state);
   }
 
-  void complete() {
-    _isCompleted = true;
+  @override
+  bool get isDone => _isCompleted;
+
+  void cancel() {
+    complete();
   }
+
+  void complete() {
+    if (isDone) return;
+    _isCompleted = true;
+    _close();
+  }
+
+  void _close() {
+    if (!_completer.isCompleted) {
+      _completer.complete();
+    }
+  }
+
+  Future<void> get future => _completer.future;
 }

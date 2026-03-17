@@ -1,15 +1,15 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_streamless_bloc/src/types.dart';
+import 'package:provider/provider.dart';
 import 'package:streamless_bloc/streamless_bloc.dart';
 
 import 'streamless_bloc_builder.dart';
-import 'streamless_bloc_listener.dart';
 
 /// {@template bloc_consumer}
 /// [StreamlessBlocConsumer] exposes a [builder] and [listener] to react to new states.
 /// {@endtemplate}
 class StreamlessBlocConsumer<B extends StreamlessBlocBase<S>, S>
-    extends StatelessWidget {
+    extends StatefulWidget {
   /// {@macro bloc_consumer}
   const StreamlessBlocConsumer({
     required this.listener,
@@ -27,16 +27,49 @@ class StreamlessBlocConsumer<B extends StreamlessBlocBase<S>, S>
   final BlocCondition<S>? listenWhen;
 
   @override
+  State<StreamlessBlocConsumer<B, S>> createState() =>
+      _StreamlessBlocConsumerState<B, S>();
+}
+
+class _StreamlessBlocConsumerState<B extends StreamlessBlocBase<S>, S>
+    extends State<StreamlessBlocConsumer<B, S>> {
+  late B _bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = widget.bloc ?? context.read<B>();
+  }
+
+  @override
+  void didUpdateWidget(StreamlessBlocConsumer<B, S> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final oldBloc = oldWidget.bloc ?? context.read<B>();
+    final currentBloc = widget.bloc ?? oldBloc;
+    if (oldBloc != currentBloc) _bloc = currentBloc;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final bloc = widget.bloc ?? context.read<B>();
+    if (_bloc != bloc) _bloc = bloc;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return StreamlessBlocListener<B, S>(
-      bloc: bloc,
-      listenWhen: listenWhen,
-      listener: listener,
-      child: StreamlessBlocBuilder<B, S>(
-        bloc: bloc,
-        buildWhen: buildWhen,
-        builder: builder,
-      ),
+    if (widget.bloc == null) {
+      context.select<B, bool>((bloc) => identical(_bloc, bloc));
+    }
+    return StreamlessBlocBuilder<B, S>(
+      bloc: _bloc,
+      builder: widget.builder,
+      buildWhen: (previous, current) {
+        if (widget.listenWhen?.call(previous, current) ?? true) {
+          widget.listener(context, current);
+        }
+        return widget.buildWhen?.call(previous, current) ?? true;
+      },
     );
   }
 }

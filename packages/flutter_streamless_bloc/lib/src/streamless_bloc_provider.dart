@@ -79,7 +79,6 @@ class StreamlessBlocProvider<T extends StreamlessBlocBase<Object?>>
     T value,
   ) {
     final listener = (_) => e.markNeedsNotifyDependents();
-
     value.addListener(listener);
     return () => value.removeListener(listener);
   }

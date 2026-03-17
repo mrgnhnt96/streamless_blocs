@@ -8,7 +8,6 @@ abstract class StreamlessBlocBase<State> {
   StreamlessBlocBase(this._state) {
     // ignore: invalid_use_of_protected_member
     StreamlessBloc.observer.onCreate(this);
-    _emit(_state);
   }
 
   final StreamlessBlocObserver _blocObserver = StreamlessBloc.observer;
@@ -20,27 +19,29 @@ abstract class StreamlessBlocBase<State> {
   /// The current [state].
   State get state => _state;
 
-  final List<void Function(State)> _stateListeners = [];
+  bool get isClosed => _disposed;
 
   void _emit(State newState) {
-    if (_disposed) {
-      throw StateError('Cannot emit new states after calling close');
-    }
-
-    if (newState == _state && _emitted) return;
-
-    onChange(Change(currentState: this.state, nextState: state));
-    _state = newState;
-    _emitted = true;
-
-    for (final listener in _stateListeners) {
-      try {
-        listener(newState);
-      } catch (_) {}
+    try {
+      if (isClosed) {
+        throw StateError('Cannot emit new states after calling close');
+      }
+      if (newState == _state && _emitted) return;
+      onChange(Change(currentState: state, nextState: newState));
+      _state = newState;
+      _emitted = true;
+      for (final listener in _stateListeners) {
+        try {
+          listener(newState);
+        } catch (_) {}
+      }
+    } catch (error, stackTrace) {
+      onError(error, stackTrace);
+      rethrow;
     }
   }
 
-  bool get isClosed => _disposed;
+  final List<void Function(State)> _stateListeners = [];
 
   @protected
   @mustCallSuper
@@ -57,7 +58,7 @@ abstract class StreamlessBlocBase<State> {
   }
 
   void addError(Object error, [StackTrace? stackTrace]) =>
-      onError(error, stackTrace);
+      onError(error, stackTrace ?? StackTrace.current);
 
   @mustCallSuper
   Future<void> close() => dispose();
