@@ -21,19 +21,20 @@ abstract class StreamlessBlocBase<State> {
 
   bool get isClosed => _disposed;
 
+  @visibleForTesting
   @protected
-  void emit(State newState) {
+  void emit(State state) {
     try {
       if (isClosed) {
         throw StateError('Cannot emit new states after calling close');
       }
-      if (newState == _state && _emitted) return;
-      onChange(Change(currentState: state, nextState: newState));
-      _state = newState;
+      if (state == _state && _emitted) return;
+      onChange(Change(currentState: state, nextState: state));
+      _state = state;
       _emitted = true;
       for (final listener in _stateListeners) {
         try {
-          listener(newState);
+          listener(state);
         } catch (e) {
           onError(e);
         }
