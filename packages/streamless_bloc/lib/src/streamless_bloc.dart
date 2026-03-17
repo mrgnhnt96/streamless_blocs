@@ -11,6 +11,10 @@ abstract class StreamlessBloc<Event, State> extends StreamlessBlocBase<State>
 
   /// The current [StreamlessBlocObserver] instance.
   static StreamlessBlocObserver observer = const _DefaultBlocObserver();
+  static EventTransformer<dynamic, dynamic> transformer =
+      (event, mapper, emit) async {
+        await mapper(event, emit);
+      };
 
   final List<_Handler<Event, State>> _handlers = [];
   final List<Event> _eventQueue = [];
@@ -49,7 +53,10 @@ abstract class StreamlessBloc<Event, State> extends StreamlessBlocBase<State>
   }
 
   /// Register event handler for an event of type `E`.
-  void on<E extends Event>(EventHandler<E, State> handler) {
+  void on<E extends Event>(
+    EventHandler<E, State> handler, {
+    EventTransformer<E, State>? transformer,
+  }) {
     final handlerExists = _handlers.any((h) => h.type == E);
     if (handlerExists) {
       throw StateError(
@@ -59,7 +66,14 @@ abstract class StreamlessBloc<Event, State> extends StreamlessBlocBase<State>
     }
 
     _handlers.add(
-      _Handler<E, State>(isType: (e) => e is E, type: E, handler: handler),
+      _Handler<E, State>(
+        isType: (e) => e is E,
+        type: E,
+        handler: handler,
+        transformer:
+            transformer ??
+            StreamlessBloc.transformer as EventTransformer<E, State>,
+      ),
     );
   }
 
@@ -94,7 +108,7 @@ abstract class StreamlessBloc<Event, State> extends StreamlessBlocBase<State>
 
         _emitters.add(emitter);
         try {
-          await handler.handler(event, emitter);
+          await handler.transformer(event, handler.handler, emitter);
           onDone(event);
         } catch (error, stackTrace) {
           onError(error, stackTrace);
