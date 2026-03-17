@@ -91,36 +91,45 @@ abstract class StreamlessBloc<Event, State> extends StreamlessBlocBase<State>
           }
         }
         if (handler == null) continue;
-
-        final (emitter, complete) = createEmitter<State>((state) {
-          if (isClosed) return;
-
-          onTransition(
-            Transition<Event, State>(
-              currentState: this.state,
-              event: event,
-              nextState: state,
-            ),
-          );
-
-          emit(state);
-        });
-
-        _emitters.add(emitter);
-        try {
-          await handler.transformer(event, handler.handler, emitter);
-          onDone(event);
-        } catch (error, stackTrace) {
-          onError(error, stackTrace);
-          onDone(event, error, stackTrace);
-          rethrow;
-        } finally {
-          complete();
-          _emitters.remove(emitter);
-        }
+        unawaited(_dispatchEvent(handler, event));
       }
     } finally {
       _isProcessing = false;
+      if (_eventQueue.isNotEmpty && !isClosed) {
+        unawaited(_processEvents());
+      }
+    }
+  }
+
+  Future<void> _dispatchEvent(
+    _Handler<dynamic, State> handler,
+    Event event,
+  ) async {
+    final (emitter, complete) = createEmitter<State>((state) {
+      if (isClosed) return;
+
+      onTransition(
+        Transition<Event, State>(
+          currentState: this.state,
+          event: event,
+          nextState: state,
+        ),
+      );
+
+      emit(state);
+    });
+
+    _emitters.add(emitter);
+    try {
+      await handler.transformer(event, handler.handler, emitter);
+      onDone(event);
+    } catch (error, stackTrace) {
+      onError(error, stackTrace);
+      onDone(event, error, stackTrace);
+      rethrow;
+    } finally {
+      complete();
+      _emitters.remove(emitter);
     }
   }
 
