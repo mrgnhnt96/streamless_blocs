@@ -42,7 +42,7 @@ abstract class StreamlessBlocBuilderBase<B extends StreamlessBlocBase<S>, S>
   const StreamlessBlocBuilderBase({super.key, this.bloc, this.buildWhen});
 
   final B? bloc;
-  final BlocBuilderCondition<S>? buildWhen;
+  final BlocCondition<S>? buildWhen;
 
   Widget build(BuildContext context, S state);
 
@@ -54,12 +54,7 @@ abstract class StreamlessBlocBuilderBase<B extends StreamlessBlocBase<S>, S>
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(
-        ObjectFlagProperty<BlocBuilderCondition<S>?>.has(
-          'buildWhen',
-          buildWhen,
-        ),
-      )
+      ..add(ObjectFlagProperty<BlocCondition<S>?>.has('buildWhen', buildWhen))
       ..add(DiagnosticsProperty<B?>('bloc', bloc));
   }
 }

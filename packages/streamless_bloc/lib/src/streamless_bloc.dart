@@ -89,7 +89,7 @@ abstract class StreamlessBloc<Event, State> extends StreamlessBlocBase<State>
             ),
           );
 
-          _emit(state);
+          emit(state);
         });
 
         _emitters.add(emitter);
