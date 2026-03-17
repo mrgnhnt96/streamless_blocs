@@ -1,0 +1,13 @@
+name: streamless_bloc
+description: A predictable state management library that replicates the bloc interface without using streams.
+version: 0.1.0
+repository: https://github.com/yourusername/streamless_blocs
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  meta: ^1.14.0
+
+dev_dependencies:
+  lints: ^5.0.0

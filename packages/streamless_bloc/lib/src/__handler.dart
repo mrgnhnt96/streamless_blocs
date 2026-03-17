@@ -1,0 +1,13 @@
+part of streamless_bloc;
+
+class _Handler<E, S> {
+  const _Handler({
+    required this.isType,
+    required this.type,
+    required this.handler,
+  });
+
+  final bool Function(dynamic) isType;
+  final Type type;
+  final EventHandler<E, S> handler;
+}

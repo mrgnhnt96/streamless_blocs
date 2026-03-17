@@ -1,0 +1,18 @@
+name: flutter_streamless_bloc
+description: Flutter widgets for the streamless_bloc (streamless bloc) state management library.
+version: 0.1.0
+repository: https://github.com/yourusername/streamless_blocs
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  streamless_bloc:
+  provider: ^6.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^5.0.0
