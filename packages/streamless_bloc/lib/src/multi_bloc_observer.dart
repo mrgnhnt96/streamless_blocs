@@ -1,4 +1,6 @@
-part of bloc;
+import 'package:streamless_bloc/src/bloc_base.dart';
+import 'package:streamless_bloc/src/change.dart';
+import 'package:streamless_bloc/src/transition.dart';
 
 /// {@template multi_bloc_observer}
 /// A [BlocObserver] which supports registering multiple [BlocObserver]
@@ -12,35 +14,42 @@ class MultiBlocObserver implements BlocObserver {
   final List<BlocObserver> observers;
 
   @override
-  void onCreate(BlocBase bloc) {
+  void onCreate(BlocBase<dynamic> bloc) {
     for (final observer in observers) {
       observer.onCreate(bloc);
     }
   }
 
   @override
-  void onEvent(Bloc bloc, Object? event) {
+  void onEvent(BlocBase<dynamic> bloc, Object? event) {
     for (final observer in observers) {
       observer.onEvent(bloc, event);
     }
   }
 
   @override
-  void onChange(BlocBase bloc, Change change) {
+  void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
     for (final observer in observers) {
       observer.onChange(bloc, change);
     }
   }
 
   @override
-  void onTransition(Bloc bloc, Transition transition) {
+  void onTransition(
+    BlocBase<dynamic> bloc,
+    Transition<dynamic, dynamic> transition,
+  ) {
     for (final observer in observers) {
       observer.onTransition(bloc, transition);
     }
   }
 
   @override
-  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+  void onError(
+    BlocBase<dynamic> bloc,
+    Object error,
+    StackTrace stackTrace,
+  ) {
     for (final observer in observers) {
       observer.onError(bloc, error, stackTrace);
     }
@@ -48,7 +57,7 @@ class MultiBlocObserver implements BlocObserver {
 
   @override
   void onDone(
-    Bloc bloc,
+    BlocBase<dynamic> bloc,
     Object? event, [
     Object? error,
     StackTrace? stackTrace,
@@ -59,7 +68,7 @@ class MultiBlocObserver implements BlocObserver {
   }
 
   @override
-  void onClose(BlocBase bloc) {
+  void onClose(BlocBase<dynamic> bloc) {
     for (final observer in observers) {
       observer.onClose(bloc);
     }

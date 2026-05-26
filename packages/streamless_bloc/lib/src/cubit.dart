@@ -1,4 +1,4 @@
-part of bloc;
+import 'package:streamless_bloc/src/bloc_base.dart';
 
 /// {@template cubit}
 /// A [Cubit] is similar to [Bloc] but has no notion of events

@@ -1,4 +1,6 @@
-part of bloc;
+import 'dart:async';
+
+import 'package:streamless_bloc/src/bloc.dart';
 
 /// Event mapper used to invoke an [EventHandler] for each incoming event.
 typedef EventMapper<Event, State> =

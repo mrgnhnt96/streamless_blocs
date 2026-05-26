@@ -1,4 +1,5 @@
-part of bloc;
+import 'package:meta/meta.dart';
+import 'package:streamless_bloc/src/change.dart';
 
 /// {@template transition}
 /// A [Transition] is the change from one state to another.

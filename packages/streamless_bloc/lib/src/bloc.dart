@@ -1,4 +1,83 @@
-part of bloc;
+import 'dart:async';
+
+import 'package:meta/meta.dart';
+import 'package:streamless_bloc/src/bloc_base.dart';
+import 'package:streamless_bloc/src/bloc_event_sink.dart';
+import 'package:streamless_bloc/src/event_handler.dart';
+import 'package:streamless_bloc/src/transition.dart';
+
+/// {@template emitter}
+/// An [Emitter] is a class which is capable of emitting new states.
+/// {@endtemplate}
+abstract class Emitter<State> {
+  /// Whether the [EventHandler] associated with this [Emitter] has completed.
+  bool get isDone;
+
+  /// Emits the provided [state].
+  void call(State state);
+}
+
+class _Handler<E, S> {
+  const _Handler({
+    required this.isType,
+    required this.type,
+    required this.handler,
+    required this.transformer,
+  });
+
+  final bool Function(dynamic) isType;
+  final Type type;
+  final EventHandler<E, S> handler;
+  final EventTransformer<E, S> transformer;
+}
+
+/// Creates an [Emitter] for use in event handlers.
+/// Returns both the emitter and a complete callback.
+(_Emitter<State> emitter, void Function() complete) createEmitter<State>(
+  void Function(State) onEmit,
+) {
+  final instance = _Emitter<State>(onEmit);
+  return (instance, () => instance.complete());
+}
+
+class _Emitter<State> implements Emitter<State> {
+  _Emitter(this._onEmit);
+
+  final void Function(State) _onEmit;
+  final _completer = Completer<void>();
+  bool _isCompleted = false;
+
+  @override
+  void call(State state) {
+    assert(
+      !_isCompleted,
+      'emit was called after an event handler completed. '
+      'Please ensure all async operations are awaited.',
+    );
+    if (!_isCompleted) _onEmit(state);
+  }
+
+  @override
+  bool get isDone => _isCompleted;
+
+  void cancel() {
+    complete();
+  }
+
+  void complete() {
+    if (isDone) return;
+    _isCompleted = true;
+    _close();
+  }
+
+  void _close() {
+    if (!_completer.isCompleted) {
+      _completer.complete();
+    }
+  }
+
+  Future<void> get future => _completer.future;
+}
 
 /// {@template bloc}
 /// Takes events as input and transforms them into states as output.
@@ -10,7 +89,10 @@ abstract class Bloc<Event, State> extends BlocBase<State>
   Bloc(super.initialState);
 
   /// The current [BlocObserver] instance.
-  static BlocObserver observer = const _DefaultBlocObserver();
+  static BlocObserver get observer => BlocBase.observer;
+
+  static set observer(BlocObserver value) => BlocBase.observer = value;
+
   static EventTransformer<dynamic, dynamic> transformer =
       (event, mapper, emit) async {
         await mapper(event, emit);
@@ -49,7 +131,7 @@ abstract class Bloc<Event, State> extends BlocBase<State>
   @mustCallSuper
   void onEvent(Event event) {
     // ignore: invalid_use_of_protected_member
-    _blocObserver.onEvent(this, event);
+    blocObserver.onEvent(this, event);
   }
 
   /// Register event handler for an event of type `E`.
@@ -71,8 +153,7 @@ abstract class Bloc<Event, State> extends BlocBase<State>
         type: E,
         handler: handler,
         transformer:
-            transformer ??
-            Bloc.transformer as EventTransformer<E, State>,
+            transformer ?? Bloc.transformer as EventTransformer<E, State>,
       ),
     );
   }
@@ -137,14 +218,14 @@ abstract class Bloc<Event, State> extends BlocBase<State>
   @mustCallSuper
   void onTransition(Transition<Event, State> transition) {
     // ignore: invalid_use_of_protected_member
-    _blocObserver.onTransition(this, transition);
+    blocObserver.onTransition(this, transition);
   }
 
   @protected
   @mustCallSuper
   void onDone(Event event, [Object? error, StackTrace? stackTrace]) {
     // ignore: invalid_use_of_protected_member
-    _blocObserver.onDone(this, event, error, stackTrace);
+    blocObserver.onDone(this, event, error, stackTrace);
   }
 
   @mustCallSuper
