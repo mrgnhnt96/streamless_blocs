@@ -2,18 +2,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_streamless_bloc/src/types.dart';
 import 'package:provider/provider.dart';
-import 'package:streamless_bloc/streamless_bloc.dart';
+import 'package:streamless_bloc/bloc.dart';
 
-import 'streamless_bloc_listener.dart';
+import 'bloc_listener.dart';
 
 /// {@template bloc_selector}
-/// [StreamlessBlocSelector] selects a value from the bloc state and rebuilds only when
+/// [BlocSelector] selects a value from the bloc state and rebuilds only when
 /// the selected value changes.
 /// {@endtemplate}
-class StreamlessBlocSelector<B extends StreamlessBlocBase<S>, S, T>
-    extends StatefulWidget {
+class BlocSelector<B extends BlocBase<S>, S, T> extends StatefulWidget {
   /// {@macro bloc_selector}
-  const StreamlessBlocSelector({
+  const BlocSelector({
     required this.selector,
     required this.builder,
     super.key,
@@ -25,12 +24,11 @@ class StreamlessBlocSelector<B extends StreamlessBlocBase<S>, S, T>
   final BlocWidgetBuilder<T> builder;
 
   @override
-  State<StreamlessBlocSelector<B, S, T>> createState() =>
-      _StreamlessBlocSelectorState<B, S, T>();
+  State<BlocSelector<B, S, T>> createState() => _BlocSelectorState<B, S, T>();
 }
 
-class _StreamlessBlocSelectorState<B extends StreamlessBlocBase<S>, S, T>
-    extends State<StreamlessBlocSelector<B, S, T>> {
+class _BlocSelectorState<B extends BlocBase<S>, S, T>
+    extends State<BlocSelector<B, S, T>> {
   late B _bloc;
   late T _state;
 
@@ -42,7 +40,7 @@ class _StreamlessBlocSelectorState<B extends StreamlessBlocBase<S>, S, T>
   }
 
   @override
-  void didUpdateWidget(StreamlessBlocSelector<B, S, T> oldWidget) {
+  void didUpdateWidget(BlocSelector<B, S, T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     final oldBloc = oldWidget.bloc ?? context.read<B>();
     final currentBloc = widget.bloc ?? oldBloc;
@@ -67,7 +65,7 @@ class _StreamlessBlocSelectorState<B extends StreamlessBlocBase<S>, S, T>
     if (widget.bloc == null) {
       context.select<B, bool>((bloc) => identical(_bloc, bloc));
     }
-    return StreamlessBlocListener<B, S>(
+    return BlocListener<B, S>(
       bloc: _bloc,
       listener: (context, state) {
         final selectedState = widget.selector(state);

@@ -1,17 +1,16 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_streamless_bloc/src/types.dart';
 import 'package:provider/provider.dart';
-import 'package:streamless_bloc/streamless_bloc.dart';
+import 'package:streamless_bloc/bloc.dart';
 
-import 'streamless_bloc_builder.dart';
+import 'bloc_builder.dart';
 
 /// {@template bloc_consumer}
-/// [StreamlessBlocConsumer] exposes a [builder] and [listener] to react to new states.
+/// [BlocConsumer] exposes a [builder] and [listener] to react to new states.
 /// {@endtemplate}
-class StreamlessBlocConsumer<B extends StreamlessBlocBase<S>, S>
-    extends StatefulWidget {
+class BlocConsumer<B extends BlocBase<S>, S> extends StatefulWidget {
   /// {@macro bloc_consumer}
-  const StreamlessBlocConsumer({
+  const BlocConsumer({
     required this.listener,
     required this.builder,
     super.key,
@@ -27,12 +26,11 @@ class StreamlessBlocConsumer<B extends StreamlessBlocBase<S>, S>
   final BlocCondition<S>? listenWhen;
 
   @override
-  State<StreamlessBlocConsumer<B, S>> createState() =>
-      _StreamlessBlocConsumerState<B, S>();
+  State<BlocConsumer<B, S>> createState() => _BlocConsumerState<B, S>();
 }
 
-class _StreamlessBlocConsumerState<B extends StreamlessBlocBase<S>, S>
-    extends State<StreamlessBlocConsumer<B, S>> {
+class _BlocConsumerState<B extends BlocBase<S>, S>
+    extends State<BlocConsumer<B, S>> {
   late B _bloc;
 
   @override
@@ -42,7 +40,7 @@ class _StreamlessBlocConsumerState<B extends StreamlessBlocBase<S>, S>
   }
 
   @override
-  void didUpdateWidget(StreamlessBlocConsumer<B, S> oldWidget) {
+  void didUpdateWidget(BlocConsumer<B, S> oldWidget) {
     super.didUpdateWidget(oldWidget);
     final oldBloc = oldWidget.bloc ?? context.read<B>();
     final currentBloc = widget.bloc ?? oldBloc;
@@ -61,7 +59,7 @@ class _StreamlessBlocConsumerState<B extends StreamlessBlocBase<S>, S>
     if (widget.bloc == null) {
       context.select<B, bool>((bloc) => identical(_bloc, bloc));
     }
-    return StreamlessBlocBuilder<B, S>(
+    return BlocBuilder<B, S>(
       bloc: _bloc,
       builder: widget.builder,
       buildWhen: (previous, current) {

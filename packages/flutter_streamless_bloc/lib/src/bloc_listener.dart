@@ -3,15 +3,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_streamless_bloc/src/types.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:streamless_bloc/streamless_bloc.dart';
+import 'package:streamless_bloc/bloc.dart';
 
 /// {@template bloc_listener}
-/// [StreamlessBlocListener] invokes the [listener] in response to state changes.
+/// [BlocListener] invokes the [listener] in response to state changes.
 /// {@endtemplate}
-class StreamlessBlocListener<B extends StreamlessBlocBase<S>, S>
-    extends StreamlessBlocListenerBase<B, S> {
+class BlocListener<B extends BlocBase<S>, S> extends BlocListenerBase<B, S> {
   /// {@macro bloc_listener}
-  const StreamlessBlocListener({
+  const BlocListener({
     required BlocWidgetListener<S> listener,
     super.key,
     B? bloc,
@@ -25,9 +24,9 @@ class StreamlessBlocListener<B extends StreamlessBlocBase<S>, S>
        );
 }
 
-abstract class StreamlessBlocListenerBase<B extends StreamlessBlocBase<S>, S>
+abstract class BlocListenerBase<B extends BlocBase<S>, S>
     extends SingleChildStatefulWidget {
-  const StreamlessBlocListenerBase({
+  const BlocListenerBase({
     required this.listener,
     super.key,
     this.bloc,
@@ -41,8 +40,8 @@ abstract class StreamlessBlocListenerBase<B extends StreamlessBlocBase<S>, S>
   final Widget? child;
 
   @override
-  SingleChildState<StreamlessBlocListenerBase<B, S>> createState() =>
-      _StreamlessBlocListenerBaseState<B, S>();
+  SingleChildState<BlocListenerBase<B, S>> createState() =>
+      _BlocListenerBaseState<B, S>();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -56,8 +55,8 @@ abstract class StreamlessBlocListenerBase<B extends StreamlessBlocBase<S>, S>
   }
 }
 
-class _StreamlessBlocListenerBaseState<B extends StreamlessBlocBase<S>, S>
-    extends SingleChildState<StreamlessBlocListenerBase<B, S>> {
+class _BlocListenerBaseState<B extends BlocBase<S>, S>
+    extends SingleChildState<BlocListenerBase<B, S>> {
   void Function(S)? _stateListener;
   late B _bloc;
   late S _previousState;
@@ -71,7 +70,7 @@ class _StreamlessBlocListenerBaseState<B extends StreamlessBlocBase<S>, S>
   }
 
   @override
-  void didUpdateWidget(StreamlessBlocListenerBase<B, S> oldWidget) {
+  void didUpdateWidget(BlocListenerBase<B, S> oldWidget) {
     super.didUpdateWidget(oldWidget);
     final oldBloc = oldWidget.bloc ?? context.read<B>();
     final currentBloc = widget.bloc ?? oldBloc;
@@ -103,7 +102,7 @@ class _StreamlessBlocListenerBaseState<B extends StreamlessBlocBase<S>, S>
   Widget buildWithChild(BuildContext context, Widget? child) {
     assert(
       child != null,
-      '${widget.runtimeType} used outside of MultiStreamlessBlocListener must specify a child',
+      '${widget.runtimeType} used outside of MultiBlocListener must specify a child',
     );
     if (widget.bloc == null) {
       context.select<B, bool>((bloc) => identical(_bloc, bloc));

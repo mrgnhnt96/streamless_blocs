@@ -2,19 +2,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_streamless_bloc/src/types.dart';
 import 'package:provider/provider.dart';
-import 'package:streamless_bloc/streamless_bloc.dart';
+import 'package:streamless_bloc/bloc.dart';
 
-import 'streamless_bloc_listener.dart';
+import 'bloc_listener.dart';
 
 /// {@template bloc_builder}
-/// [StreamlessBlocBuilder] handles building a widget in response to new `states`.
+/// [BlocBuilder] handles building a widget in response to new `states`.
 ///
 /// [builder] respects [buildWhen] all except for the first build, where the current state is always provided.
 /// {@endtemplate}
-class StreamlessBlocBuilder<B extends StreamlessBlocBase<S>, S>
-    extends StreamlessBlocBuilderBase<B, S> {
+class BlocBuilder<B extends BlocBase<S>, S> extends BlocBuilderBase<B, S> {
   /// {@macro bloc_builder}
-  const StreamlessBlocBuilder({
+  const BlocBuilder({
     required this.builder,
     super.key,
     super.bloc,
@@ -36,10 +35,9 @@ class StreamlessBlocBuilder<B extends StreamlessBlocBase<S>, S>
 }
 
 /// Base class for widgets that build themselves based on a [bloc].
-abstract class StreamlessBlocBuilderBase<B extends StreamlessBlocBase<S>, S>
-    extends StatefulWidget {
+abstract class BlocBuilderBase<B extends BlocBase<S>, S> extends StatefulWidget {
   /// {@macro bloc_builder_base}
-  const StreamlessBlocBuilderBase({super.key, this.bloc, this.buildWhen});
+  const BlocBuilderBase({super.key, this.bloc, this.buildWhen});
 
   final B? bloc;
   final BlocCondition<S>? buildWhen;
@@ -47,8 +45,7 @@ abstract class StreamlessBlocBuilderBase<B extends StreamlessBlocBase<S>, S>
   Widget build(BuildContext context, S state);
 
   @override
-  State<StreamlessBlocBuilderBase<B, S>> createState() =>
-      _StreamlessBlocBuilderBaseState<B, S>();
+  State<BlocBuilderBase<B, S>> createState() => _BlocBuilderBaseState<B, S>();
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
@@ -59,8 +56,8 @@ abstract class StreamlessBlocBuilderBase<B extends StreamlessBlocBase<S>, S>
   }
 }
 
-class _StreamlessBlocBuilderBaseState<B extends StreamlessBlocBase<S>, S>
-    extends State<StreamlessBlocBuilderBase<B, S>> {
+class _BlocBuilderBaseState<B extends BlocBase<S>, S>
+    extends State<BlocBuilderBase<B, S>> {
   late B _bloc;
   late S _state;
 
@@ -72,7 +69,7 @@ class _StreamlessBlocBuilderBaseState<B extends StreamlessBlocBase<S>, S>
   }
 
   @override
-  void didUpdateWidget(StreamlessBlocBuilderBase<B, S> oldWidget) {
+  void didUpdateWidget(BlocBuilderBase<B, S> oldWidget) {
     super.didUpdateWidget(oldWidget);
     final oldBloc = oldWidget.bloc ?? context.read<B>();
     final currentBloc = widget.bloc ?? oldBloc;
@@ -97,7 +94,7 @@ class _StreamlessBlocBuilderBaseState<B extends StreamlessBlocBase<S>, S>
     if (widget.bloc == null) {
       context.select<B, bool>((bloc) => identical(_bloc, bloc));
     }
-    return StreamlessBlocListener<B, S>(
+    return BlocListener<B, S>(
       bloc: _bloc,
       listenWhen: widget.buildWhen,
       listener: (context, state) => setState(() => _state = state),

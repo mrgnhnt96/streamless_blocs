@@ -2,17 +2,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:streamless_bloc/streamless_bloc.dart';
+import 'package:streamless_bloc/bloc.dart';
 
 /// {@template bloc_provider}
 /// Takes a `create` function that is responsible for creating the [Bloc] or
 /// [Cubit] and a [child] which will have access to the instance via
 /// `BlocProvider.of(context)`.
 /// {@endtemplate}
-class StreamlessBlocProvider<T extends StreamlessBlocBase<Object?>>
-    extends SingleChildStatelessWidget {
+class BlocProvider<T extends BlocBase<Object?>> extends SingleChildStatelessWidget {
   /// {@macro bloc_provider}
-  const StreamlessBlocProvider({
+  const BlocProvider({
     required T Function(BuildContext context) create,
     super.key,
     this.child,
@@ -22,7 +21,7 @@ class StreamlessBlocProvider<T extends StreamlessBlocBase<Object?>>
        super(child: child);
 
   /// Provides an existing [value] to a subtree.
-  const StreamlessBlocProvider.value({required T value, super.key, this.child})
+  const BlocProvider.value({required T value, super.key, this.child})
     : _value = value,
       _create = null,
       lazy = true,
@@ -38,7 +37,7 @@ class StreamlessBlocProvider<T extends StreamlessBlocBase<Object?>>
   final T? _value;
 
   /// Returns the [Bloc] or [Cubit] from the current context.
-  static T of<T extends StreamlessBlocBase<Object?>>(
+  static T of<T extends BlocBase<Object?>>(
     BuildContext context, {
     bool listen = false,
   }) {
@@ -74,7 +73,7 @@ class StreamlessBlocProvider<T extends StreamlessBlocBase<Object?>>
           );
   }
 
-  static VoidCallback _startListening<T extends StreamlessBlocBase<Object?>>(
+  static VoidCallback _startListening<T extends BlocBase<Object?>>(
     InheritedContext<T?> e,
     T value,
   ) {
