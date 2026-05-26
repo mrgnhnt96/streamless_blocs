@@ -6,8 +6,8 @@ import 'package:streamless_bloc/bloc.dart';
 ///
 /// When [eager] is `true`, process the first event in a burst immediately,
 /// then debounce subsequent incoming events.
-EventTransformer<Event, State> debounce<Event, State>(
-  Duration duration, {
+EventTransformer<Event, State> debounce<Event, State>({
+  Duration duration = const Duration(milliseconds: 300),
   bool eager = false,
 }) {
   Timer? timer;
@@ -74,11 +74,13 @@ EventTransformer<Event, State> debounce<Event, State>(
           if (!(activeEmit?.isDone ?? true)) {
             await activeMapper!(latestEvent, activeEmit!);
           }
-          if (latestCompleter case final completer? when !completer.isCompleted) {
+          if (latestCompleter case final completer?
+              when !completer.isCompleted) {
             completer.complete();
           }
         } catch (error, stackTrace) {
-          if (latestCompleter case final completer? when !completer.isCompleted) {
+          if (latestCompleter case final completer?
+              when !completer.isCompleted) {
             completer.completeError(error, stackTrace);
           }
         }
