@@ -1,4 +1,4 @@
-part of streamless_bloc;
+part of bloc;
 
 /// Event mapper used to invoke an [EventHandler] for each incoming event.
 typedef EventMapper<Event, State> =

@@ -1,4 +1,4 @@
-part of streamless_bloc;
+part of bloc;
 
 /// {@template change}
 /// A [Change] represents the change from one [State] to another.

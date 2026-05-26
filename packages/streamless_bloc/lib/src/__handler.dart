@@ -1,4 +1,4 @@
-part of streamless_bloc;
+part of bloc;
 
 class _Handler<E, S> {
   const _Handler({

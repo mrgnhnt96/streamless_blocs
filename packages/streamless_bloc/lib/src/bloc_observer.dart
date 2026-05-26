@@ -1,52 +1,52 @@
-part of streamless_bloc;
+part of bloc;
 
 /// {@template bloc_observer}
-/// An interface for observing the behavior of [StreamlessBloc] instances.
+/// An interface for observing the behavior of [Bloc] instances.
 /// {@endtemplate}
-abstract class StreamlessBlocObserver {
+abstract class BlocObserver {
   /// {@macro bloc_observer}
-  const StreamlessBlocObserver();
+  const BlocObserver();
 
-  /// Called whenever a [StreamlessBloc] is instantiated.
+  /// Called whenever a [Bloc] is instantiated.
   @protected
   @mustCallSuper
-  void onCreate(StreamlessBlocBase bloc) {}
+  void onCreate(BlocBase bloc) {}
 
   /// Called whenever an [event] is `added` to any [bloc] with the given [bloc]
   /// and [event].
   @protected
   @mustCallSuper
-  void onEvent(StreamlessBloc bloc, Object? event) {}
+  void onEvent(Bloc bloc, Object? event) {}
 
   /// Called whenever a [Change] occurs in any [bloc]
   /// A [change] occurs when a new state is emitted.
   @protected
   @mustCallSuper
-  void onChange(StreamlessBlocBase bloc, Change change) {}
+  void onChange(BlocBase bloc, Change change) {}
 
   /// Called whenever a transition occurs in any [bloc] with the given [bloc]
   /// and [transition].
   @protected
   @mustCallSuper
-  void onTransition(StreamlessBloc bloc, Transition transition) {}
+  void onTransition(Bloc bloc, Transition transition) {}
 
-  /// Called whenever an [error] is thrown in any [StreamlessBloc] or [StreamlessCubit].
+  /// Called whenever an [error] is thrown in any [Bloc] or [Cubit].
   @protected
   @mustCallSuper
-  void onError(StreamlessBlocBase bloc, Object error, StackTrace stackTrace) {}
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {}
 
   /// Called whenever an [event] handler for a specific [bloc] has completed.
   @protected
   @mustCallSuper
   void onDone(
-    StreamlessBloc bloc,
+    Bloc bloc,
     Object? event, [
     Object? error,
     StackTrace? stackTrace,
   ]) {}
 
-  /// Called whenever a [StreamlessBloc] is closed.
+  /// Called whenever a [Bloc] is closed.
   @protected
   @mustCallSuper
-  void onClose(StreamlessBlocBase bloc) {}
+  void onClose(BlocBase bloc) {}
 }

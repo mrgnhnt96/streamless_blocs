@@ -1,46 +1,46 @@
-part of streamless_bloc;
+part of bloc;
 
 /// {@template multi_bloc_observer}
-/// A [StreamlessBlocObserver] which supports registering multiple [StreamlessBlocObserver]
+/// A [BlocObserver] which supports registering multiple [BlocObserver]
 /// instances.
 /// {@endtemplate}
-class MultiStreamlessBlocObserver implements StreamlessBlocObserver {
+class MultiBlocObserver implements BlocObserver {
   /// {@macro multi_bloc_observer}
-  const MultiStreamlessBlocObserver({required this.observers});
+  const MultiBlocObserver({required this.observers});
 
-  /// The list of [StreamlessBlocObserver] instances that will be registered.
-  final List<StreamlessBlocObserver> observers;
+  /// The list of [BlocObserver] instances that will be registered.
+  final List<BlocObserver> observers;
 
   @override
-  void onCreate(StreamlessBlocBase bloc) {
+  void onCreate(BlocBase bloc) {
     for (final observer in observers) {
       observer.onCreate(bloc);
     }
   }
 
   @override
-  void onEvent(StreamlessBloc bloc, Object? event) {
+  void onEvent(Bloc bloc, Object? event) {
     for (final observer in observers) {
       observer.onEvent(bloc, event);
     }
   }
 
   @override
-  void onChange(StreamlessBlocBase bloc, Change change) {
+  void onChange(BlocBase bloc, Change change) {
     for (final observer in observers) {
       observer.onChange(bloc, change);
     }
   }
 
   @override
-  void onTransition(StreamlessBloc bloc, Transition transition) {
+  void onTransition(Bloc bloc, Transition transition) {
     for (final observer in observers) {
       observer.onTransition(bloc, transition);
     }
   }
 
   @override
-  void onError(StreamlessBlocBase bloc, Object error, StackTrace stackTrace) {
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
     for (final observer in observers) {
       observer.onError(bloc, error, stackTrace);
     }
@@ -48,7 +48,7 @@ class MultiStreamlessBlocObserver implements StreamlessBlocObserver {
 
   @override
   void onDone(
-    StreamlessBloc bloc,
+    Bloc bloc,
     Object? event, [
     Object? error,
     StackTrace? stackTrace,
@@ -59,7 +59,7 @@ class MultiStreamlessBlocObserver implements StreamlessBlocObserver {
   }
 
   @override
-  void onClose(StreamlessBlocBase bloc) {
+  void onClose(BlocBase bloc) {
     for (final observer in observers) {
       observer.onClose(bloc);
     }

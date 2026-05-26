@@ -1,16 +1,16 @@
-part of streamless_bloc;
+part of bloc;
 
 /// {@template bloc_base}
-/// An interface for the core functionality implemented by both [StreamlessBloc] and [StreamlessCubit].
+/// An interface for the core functionality implemented by both [Bloc] and [Cubit].
 /// {@endtemplate}
-abstract class StreamlessBlocBase<State> {
+abstract class BlocBase<State> {
   /// {@macro bloc_base}
-  StreamlessBlocBase(this._state) {
+  BlocBase(this._state) {
     // ignore: invalid_use_of_protected_member
-    StreamlessBloc.observer.onCreate(this);
+    Bloc.observer.onCreate(this);
   }
 
-  final StreamlessBlocObserver _blocObserver = StreamlessBloc.observer;
+  final BlocObserver _blocObserver = Bloc.observer;
 
   State _state;
   bool _emitted = false;

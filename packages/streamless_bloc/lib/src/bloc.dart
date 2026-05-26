@@ -1,16 +1,16 @@
-part of streamless_bloc;
+part of bloc;
 
 /// {@template bloc}
 /// Takes events as input and transforms them into states as output.
 /// Processes events via a queue (no streams).
 /// {@endtemplate}
-abstract class StreamlessBloc<Event, State> extends StreamlessBlocBase<State>
+abstract class Bloc<Event, State> extends BlocBase<State>
     implements BlocEventSink<Event> {
   /// {@macro bloc}
-  StreamlessBloc(super.initialState);
+  Bloc(super.initialState);
 
-  /// The current [StreamlessBlocObserver] instance.
-  static StreamlessBlocObserver observer = const _DefaultBlocObserver();
+  /// The current [BlocObserver] instance.
+  static BlocObserver observer = const _DefaultBlocObserver();
   static EventTransformer<dynamic, dynamic> transformer =
       (event, mapper, emit) async {
         await mapper(event, emit);
@@ -72,7 +72,7 @@ abstract class StreamlessBloc<Event, State> extends StreamlessBlocBase<State>
         handler: handler,
         transformer:
             transformer ??
-            StreamlessBloc.transformer as EventTransformer<E, State>,
+            Bloc.transformer as EventTransformer<E, State>,
       ),
     );
   }

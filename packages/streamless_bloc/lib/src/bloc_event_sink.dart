@@ -1,4 +1,4 @@
-part of streamless_bloc;
+part of bloc;
 
 abstract class BlocEventSink<Event> {
   /// Adds an [event] to the sink.

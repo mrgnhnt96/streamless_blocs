@@ -1,4 +1,4 @@
-part of streamless_bloc;
+part of bloc;
 
 /// {@template transition}
 /// A [Transition] is the change from one state to another.

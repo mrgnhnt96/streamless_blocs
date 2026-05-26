@@ -1,4 +1,4 @@
-part of streamless_bloc;
+part of bloc;
 
 /// {@template emitter}
 /// An [Emitter] is a class which is capable of emitting new states.
