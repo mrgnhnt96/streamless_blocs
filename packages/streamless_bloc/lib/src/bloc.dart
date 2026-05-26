@@ -17,18 +17,33 @@ abstract class Emitter<State> {
   void call(State state);
 }
 
-class _Handler<E, S> {
-  const _Handler({
-    required this.isType,
+abstract class _HandlerEntry<S> {
+  bool isType(dynamic event);
+  Type get type;
+  Future<void> dispatch(dynamic event, Emitter<S> emit);
+}
+
+class _Handler<E, S> implements _HandlerEntry<S> {
+  _Handler({
+    required bool Function(dynamic) isType,
     required this.type,
     required this.handler,
     required this.transformer,
-  });
+  }) : _isType = isType;
 
-  final bool Function(dynamic) isType;
+  final bool Function(dynamic) _isType;
+  @override
   final Type type;
   final EventHandler<E, S> handler;
   final EventTransformer<E, S> transformer;
+
+  @override
+  bool isType(dynamic event) => _isType(event);
+
+  @override
+  Future<void> dispatch(dynamic event, Emitter<S> emit) {
+    return Future.sync(() => transformer(event as E, handler, emit));
+  }
 }
 
 /// Creates an [Emitter] for use in event handlers.
@@ -98,7 +113,7 @@ abstract class Bloc<Event, State> extends BlocBase<State>
         await mapper(event, emit);
       };
 
-  final List<_Handler<Event, State>> _handlers = [];
+  final List<_HandlerEntry<State>> _handlers = [];
   final List<Event> _eventQueue = [];
   final List<_Emitter<State>> _emitters = [];
   bool _isProcessing = false;
@@ -164,7 +179,7 @@ abstract class Bloc<Event, State> extends BlocBase<State>
     try {
       while (_eventQueue.isNotEmpty && !isClosed) {
         final event = _eventQueue.removeAt(0);
-        _Handler<dynamic, State>? handler;
+        _HandlerEntry<State>? handler;
         for (final h in _handlers) {
           if (h.isType(event)) {
             handler = h;
@@ -183,7 +198,7 @@ abstract class Bloc<Event, State> extends BlocBase<State>
   }
 
   Future<void> _dispatchEvent(
-    _Handler<dynamic, State> handler,
+    _HandlerEntry<State> handler,
     Event event,
   ) async {
     final (emitter, complete) = createEmitter<State>((state) {
@@ -202,7 +217,7 @@ abstract class Bloc<Event, State> extends BlocBase<State>
 
     _emitters.add(emitter);
     try {
-      await handler.transformer(event, handler.handler, emitter);
+      await handler.dispatch(event, emitter);
       onDone(event);
     } catch (error, stackTrace) {
       onError(error, stackTrace);

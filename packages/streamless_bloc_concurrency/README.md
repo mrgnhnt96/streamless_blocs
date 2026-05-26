@@ -28,11 +28,13 @@ class CounterBloc extends Bloc<CounterEvent, int> {
 }
 ```
 
-## Available transformers
+## Event Transformers
+
+`streamless_bloc_concurrency` provides an opinionated set of event transformers:
 
 - `concurrent` - process events concurrently
-- `sequential` - process events one at a time in arrival order
-- `droppable` - ignore incoming events while one is in progress
+- `sequential` - process events sequentially
+- `droppable` - ignore any events added while an event is processing
+- `restartable` - process only the latest event and cancel previous event handlers
 - `debounce(duration, eager: false)` - wait for a pause, then process only the latest event
   - Set `eager: true` to process the first event in a burst immediately, then debounce subsequent events
-- `restartable` - keep only the latest event and ignore stale emits
