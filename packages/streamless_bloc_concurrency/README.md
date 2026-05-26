@@ -13,7 +13,7 @@ dependencies:
 
 ```dart
 import 'package:streamless_bloc_concurrency/bloc_concurrency.dart';
-import 'package:streamless_bloc/streamless_bloc.dart';
+import 'package:streamless_bloc/bloc.dart';
 
 sealed class CounterEvent {}
 final class Increment extends CounterEvent {}
@@ -33,5 +33,6 @@ class CounterBloc extends Bloc<CounterEvent, int> {
 - `concurrent` - process events concurrently
 - `sequential` - process events one at a time in arrival order
 - `droppable` - ignore incoming events while one is in progress
-- `debounce(duration)` - wait for a pause, then process only the latest event
+- `debounce(duration, eager: false)` - wait for a pause, then process only the latest event
+  - Set `eager: true` to process the first event in a burst immediately, then debounce subsequent events
 - `restartable` - keep only the latest event and ignore stale emits

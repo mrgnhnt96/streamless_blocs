@@ -8,7 +8,6 @@ export 'src/bloc_base.dart';
 export 'src/bloc_event_sink.dart';
 export 'src/change.dart';
 export 'src/cubit.dart';
-export 'src/emitter.dart';
 export 'src/event_handler.dart';
 export 'src/multi_bloc_observer.dart';
 export 'src/transition.dart';
