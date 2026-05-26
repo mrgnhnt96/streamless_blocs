@@ -1,6 +1,7 @@
 import 'package:streamless_bloc/src/bloc_base.dart';
 import 'package:streamless_bloc/src/change.dart';
 import 'package:streamless_bloc/src/transition.dart';
+import 'package:streamless_bloc/src/bloc_observer.dart';
 
 /// {@template multi_bloc_observer}
 /// A [BlocObserver] which supports registering multiple [BlocObserver]
@@ -45,11 +46,7 @@ class MultiBlocObserver implements BlocObserver {
   }
 
   @override
-  void onError(
-    BlocBase<dynamic> bloc,
-    Object error,
-    StackTrace stackTrace,
-  ) {
+  void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
     for (final observer in observers) {
       observer.onError(bloc, error, stackTrace);
     }

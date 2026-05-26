@@ -5,6 +5,7 @@ import 'package:streamless_bloc/src/bloc_base.dart';
 import 'package:streamless_bloc/src/bloc_event_sink.dart';
 import 'package:streamless_bloc/src/event_handler.dart';
 import 'package:streamless_bloc/src/transition.dart';
+import 'package:streamless_bloc/src/bloc_observer.dart';
 
 /// {@template emitter}
 /// An [Emitter] is a class which is capable of emitting new states.
@@ -197,10 +198,7 @@ abstract class Bloc<Event, State> extends BlocBase<State>
     }
   }
 
-  Future<void> _dispatchEvent(
-    _HandlerEntry<State> handler,
-    Event event,
-  ) async {
+  Future<void> _dispatchEvent(_HandlerEntry<State> handler, Event event) async {
     final (emitter, complete) = createEmitter<State>((state) {
       if (isClosed) return;
 
