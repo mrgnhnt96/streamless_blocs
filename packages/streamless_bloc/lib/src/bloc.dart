@@ -109,10 +109,14 @@ abstract class Bloc<Event, State> extends BlocBase<State>
 
   static set observer(BlocObserver value) => BlocBase.observer = value;
 
+  static EventTransformer<Event, State> _defaultTransformer<Event, State>() {
+    return (event, mapper, emit) async {
+      await mapper(event, emit);
+    };
+  }
+
   static EventTransformer<dynamic, dynamic> transformer =
-      (event, mapper, emit) async {
-        await mapper(event, emit);
-      };
+      _defaultTransformer<dynamic, dynamic>();
 
   final List<_HandlerEntry<State>> _handlers = [];
   final List<Event> _eventQueue = [];
@@ -168,8 +172,7 @@ abstract class Bloc<Event, State> extends BlocBase<State>
         isType: (e) => e is E,
         type: E,
         handler: handler,
-        transformer:
-            transformer ?? Bloc.transformer as EventTransformer<E, State>,
+        transformer: transformer ?? _defaultTransformer<E, State>(),
       ),
     );
   }

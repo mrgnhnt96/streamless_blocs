@@ -11,3 +11,6 @@ dependencies:
 
 dev_dependencies:
   lints: ^5.0.0
+  streamless_bloc_concurrency:
+    path: ../streamless_bloc_concurrency
+  test: ^1.31.1
