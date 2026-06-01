@@ -7,6 +7,7 @@ A predictable state management library that **replicates the bloc interface exac
 - **streamless_bloc** - Core Dart package (no Flutter dependency)
 - **flutter_streamless_bloc** - Flutter widgets for integrating streamless_bloc into your app
 - **streamless_bloc_concurrency** - Event transformers for concurrent event handling
+- **streamless_bloc_test** - Testing utilities (mirrors bloc_test for streamless blocs)
 
 ## Why streamless_bloc?
 
