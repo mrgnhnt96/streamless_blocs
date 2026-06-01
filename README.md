@@ -1,6 +1,6 @@
 # Streamless Blocs (streamless_bloc)
 
-A predictable state management library that **replicates the bloc interface exactly** but removes the use of streams for event processing. Uses a simple queue-based approach instead of stream transformers.
+A predictable state management library that **replicates the bloc interface exactly** but removes the use of streams for event processing — preserving the original stack traces when event handlers throw.
 
 ## Packages
 
@@ -10,12 +10,13 @@ A predictable state management library that **replicates the bloc interface exac
 
 ## Why streamless_bloc?
 
-The standard [bloc](https://bloclibrary.dev) package uses Dart streams extensively for both state propagation and event processing. streamless_bloc provides the same API (`Bloc`, `Cubit`, `BlocBase`, `emit`, `add`, `onChange`, etc.) but uses:
+The standard [bloc](https://bloclibrary.dev) package routes event processing through Dart streams and stream transformers. When an event handler throws, that error passes through async stream machinery — listeners, subscriptions, and nested transformers — which often replaces the original stack trace with one pointing at stream internals. That makes production debugging and crash reporting much harder.
 
-- **Queue-based event processing** - Events are processed from a simple queue instead of stream transformers
-- **Minimal stream usage** - State still exposes a `stream` getter for Flutter widget compatibility (used by `BlocBuilder`, etc.)
+**streamless_bloc exists to preserve stack traces.** It provides the same API (`Bloc`, `Cubit`, `BlocBase`, `emit`, `add`, `onChange`, etc.) but processes events through a direct queue and `Future` chain instead of streams. Errors are caught at the handler boundary with their original `StackTrace` intact and forwarded to `BlocObserver.onError` / `onDone`.
 
-## Getting Started
+Under the hood:
+
+- **Queue-based event processing** — Events are processed from a simple queue instead of stream transformers
 
 ### Installation
 
