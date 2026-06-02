@@ -1,3 +1,10 @@
+/*
+ * Originally derived from the Bloc package:
+ * https://github.com/felangel/bloc
+ * Copyright (c) 2019-present Felix Angelov
+ * Modified for Streamless Blocs.
+ */
+
 import 'dart:async';
 
 import 'package:diff_match_patch/diff_match_patch.dart';

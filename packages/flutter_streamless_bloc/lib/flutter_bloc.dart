@@ -1,3 +1,10 @@
+/*
+ * Originally derived from the Bloc package:
+ * https://github.com/felangel/bloc
+ * Copyright (c) 2019-present Felix Angelov
+ * Modified for Streamless Blocs.
+ */
+
 // dart format width=250
 
 export 'package:provider/provider.dart' show ProviderNotFoundException, ReadContext, SelectContext, WatchContext;

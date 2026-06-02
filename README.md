@@ -70,6 +70,14 @@ This project uses [FVM](https://fvm.app) to pin the Flutter version:
 fvm use stable  # or fvm use 3.38.9
 ```
 
+## Attribution
+
+This project is derived from and heavily based on [Bloc](https://github.com/felangel/bloc), created by [Felix Angelov](https://github.com/felangel).
+
+Streamless Blocs reimplements and modifies the original Bloc source under the MIT License. See [NOTICE.md](NOTICE.md) for details on derived code and modifications.
+
+**Streamless Blocs is not the official Bloc package.** It is an independent project and is not maintained, sponsored, or endorsed by Felix Angelov or the Bloc project unless explicitly stated elsewhere.
+
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE). This project includes code derived from Bloc (copyright Felix Angelov) and modifications by Streamless Blocs contributors.

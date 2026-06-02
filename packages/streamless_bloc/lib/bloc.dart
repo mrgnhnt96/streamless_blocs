@@ -1,3 +1,10 @@
+/*
+ * Originally derived from the Bloc package:
+ * https://github.com/felangel/bloc
+ * Copyright (c) 2019-present Felix Angelov
+ * Modified for Streamless Blocs.
+ */
+
 /// A predictable state management library for [Dart](https://dart.dev).
 ///
 /// Replicates the bloc interface exactly but without using streams internally.
