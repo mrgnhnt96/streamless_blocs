@@ -1,7 +1,7 @@
 name: streamless_bloc_test
-description: A testing library which makes it easy to test streamless blocs. Built to be used with the streamless_bloc state management package.
+description: A testing library which makes it easy to test streamless bloc. Built to be used with the streamless_bloc state management package.
 version: 0.1.0
-repository: https://github.com/yourusername/streamless_blocs
+repository: https://github.com/yourusername/streamless_bloc
 
 environment:
   sdk: ^3.10.0

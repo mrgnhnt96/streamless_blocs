@@ -1,4 +1,4 @@
-# Streamless Blocs (streamless_bloc)
+# Streamless Bloc (streamless_bloc)
 
 A predictable state management library that **replicates the bloc interface exactly** but removes the use of streams for event processing — preserving the original stack traces when event handlers throw.
 
@@ -7,7 +7,7 @@ A predictable state management library that **replicates the bloc interface exac
 - **streamless_bloc** - Core Dart package (no Flutter dependency)
 - **flutter_streamless_bloc** - Flutter widgets for integrating streamless_bloc into your app
 - **streamless_bloc_concurrency** - Event transformers for concurrent event handling
-- **streamless_bloc_test** - Testing utilities (mirrors bloc_test for streamless blocs)
+- **streamless_bloc_test** - Testing utilities (mirrors bloc_test for streamless bloc)
 
 ## Why streamless_bloc?
 
@@ -74,10 +74,10 @@ fvm use stable  # or fvm use 3.38.9
 
 This project is derived from and heavily based on [Bloc](https://github.com/felangel/bloc), created by [Felix Angelov](https://github.com/felangel).
 
-Streamless Blocs reimplements and modifies the original Bloc source under the MIT License. See [NOTICE.md](NOTICE.md) for details on derived code and modifications.
+Streamless Bloc reimplements and modifies the original Bloc source under the MIT License. See [NOTICE.md](NOTICE.md) for details on derived code and modifications.
 
-**Streamless Blocs is not the official Bloc package.** It is an independent project and is not maintained, sponsored, or endorsed by Felix Angelov or the Bloc project unless explicitly stated elsewhere.
+**Streamless Bloc is not the official Bloc package.** It is an independent project and is not maintained, sponsored, or endorsed by Felix Angelov or the Bloc project unless explicitly stated elsewhere.
 
 ## License
 
-MIT — see [LICENSE](LICENSE). This project includes code derived from Bloc (copyright Felix Angelov) and modifications by Streamless Blocs contributors.
+MIT — see [LICENSE](LICENSE). This project includes code derived from Bloc (copyright Felix Angelov) and modifications by Streamless Bloc contributors.

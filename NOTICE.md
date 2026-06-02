@@ -1,6 +1,6 @@
 # Notice
 
-Streamless Blocs contains modified source code derived from the Bloc package by Felix Angelov.
+Streamless Bloc contains modified source code derived from the Bloc package by Felix Angelov.
 
 Original project:
 
@@ -14,4 +14,4 @@ Major modifications include:
 * Synchronous state notifications
 * Changes to the event/state processing model
 
-Streamless Blocs is an independent project and is not affiliated with, maintained by, or endorsed by Felix Angelov or the Bloc project.
+Streamless Bloc is an independent project and is not affiliated with, maintained by, or endorsed by Felix Angelov or the Bloc project.

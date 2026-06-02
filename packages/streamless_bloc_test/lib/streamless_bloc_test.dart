@@ -1,4 +1,4 @@
-/// A testing library which makes it easy to test streamless blocs.
+/// A testing library which makes it easy to test streamless bloc.
 library streamless_bloc_test;
 
 export 'src/bloc_test.dart';

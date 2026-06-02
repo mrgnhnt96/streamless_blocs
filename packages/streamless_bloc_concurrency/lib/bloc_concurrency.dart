@@ -2,12 +2,12 @@
  * Originally derived from the Bloc package:
  * https://github.com/felangel/bloc
  * Copyright (c) 2019-present Felix Angelov
- * Modified for Streamless Blocs.
+ * Modified for Streamless Bloc.
  */
 
 /// Custom event transformers inspired by ember concurrency.
 /// Built to be used with the
-/// [streamless_bloc](https://github.com/yourusername/streamless_blocs)
+/// [streamless_bloc](https://github.com/yourusername/streamless_bloc)
 /// state management package.
 library streamless_bloc_concurrency;
 

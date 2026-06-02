@@ -1,8 +1,8 @@
 # streamless_bloc_test
 
-A Dart package that makes testing streamless blocs and cubits easy. Built to work with [streamless_bloc](https://pub.dev/packages/streamless_bloc) and [mocktail](https://pub.dev/packages/mocktail).
+A Dart package that makes testing streamless bloc and cubits easy. Built to work with [streamless_bloc](https://pub.dev/packages/streamless_bloc) and [mocktail](https://pub.dev/packages/mocktail).
 
-This package mirrors the [bloc_test](https://pub.dev/packages/bloc_test) API, adapted for streamless blocs that use `addListener` instead of streams.
+This package mirrors the [bloc_test](https://pub.dev/packages/bloc_test) API, adapted for streamless bloc that use `addListener` instead of streams.
 
 ## Installation
 

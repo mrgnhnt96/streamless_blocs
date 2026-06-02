@@ -1,7 +1,7 @@
 name: streamless_bloc_concurrency
 description: Event transformers for streamless_bloc to control concurrent event handling.
 version: 0.1.0
-repository: https://github.com/yourusername/streamless_blocs
+repository: https://github.com/yourusername/streamless_bloc
 
 environment:
   sdk: ^3.10.0

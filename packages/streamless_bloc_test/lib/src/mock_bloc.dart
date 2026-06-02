@@ -2,7 +2,7 @@
  * Originally derived from the Bloc package:
  * https://github.com/felangel/bloc
  * Copyright (c) 2019-present Felix Angelov
- * Modified for Streamless Blocs.
+ * Modified for Streamless Bloc.
  */
 
 import 'package:mocktail/mocktail.dart';
